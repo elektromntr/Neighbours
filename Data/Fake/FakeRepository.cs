@@ -1,20 +1,17 @@
-﻿using Data.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Data.Models;
 
 namespace Data.Fake
 {
 	public class FakeRepository
 	{
+        private IList<Product> _products;
+        
 		public FakeRepository()
 		{
-		}
-
-		public virtual IList<Product> GetProducts()
-		{
-			return
-			new List<Product>
+			_products = new List<Product>
 			{
 				new Product
 				{
@@ -30,6 +27,9 @@ namespace Data.Fake
 				}
 			};
 		}
+
+		public virtual IEnumerable<Product> GetProducts() =>
+             _products;
 
 		private IList<ProductType> GetTypes()
 		{
@@ -51,16 +51,15 @@ namespace Data.Fake
 
 		public virtual Product Add(Product product)
 		{
-			var repo = GetProducts();
-			repo.Add(product);
-			return repo.FirstOrDefault(r => r.Id.Equals(product.Id));
+			_products.Add(product);
+			var res = _products.FirstOrDefault(r => r.Id.Equals(product.Id));
+			return res;
 		}
 
 		public virtual void Delete(Guid id)
 		{
-			var repo = GetProducts();
-			var entity = repo.FirstOrDefault(p => p.Id.Equals(id));
-			repo.Remove(entity);
+			var entity = _products.FirstOrDefault(p => p.Id.Equals(id));
+			_products.Remove(entity);
 		}
 	}
 }

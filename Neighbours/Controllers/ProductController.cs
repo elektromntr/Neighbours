@@ -1,11 +1,10 @@
-﻿using Data.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Data.Models;
 using Logic.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Neighbours.Controllers
 {
@@ -25,16 +24,20 @@ namespace Neighbours.Controllers
 
 		[HttpGet]
 		[Route("All")]
-		public async Task<IEnumerable<Product>> GetAll()
+		public async Task<ActionResult<IEnumerable<Product>>> GetAll()
 		{
-			return await _productService.GetMany(p => !p.Deleted);
+            var result = await _productService.GetMany(p => !p.Deleted);
+			if (result is null) return NotFound();
+            return Ok(result);
 		}
 
 		[HttpGet]
 		[Route("GetOne/{id:Guid}")]
-		public async Task<Product> GetOne(Guid id)
+		public async Task<ActionResult<Product>> GetOne(Guid id)
 		{
-			return await _productService.GetOne(id);
-		}
+            var result = await _productService.GetOne(id);
+            if (result is null) return NotFound();
+            return Ok(result);
+        }
 	}
 }

@@ -31,9 +31,8 @@ namespace Logic.Services
 
 		public async Task<Product> Create(Product product)
 		{
-			var repo = new List<Product>();
-			repo.Add(product);
-			return repo.FirstOrDefault(r => r.Id.Equals(product.Id));
+			var result = _fakeRepo.Add(product);
+			return result;
 		}
 
 		public async Task Delete(Guid id)

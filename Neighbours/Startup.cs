@@ -35,7 +35,7 @@ namespace Neighbours
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Neighbours", Version = "v1" });
 			});
-			services.AddTransient<FakeRepository>();
+			services.AddSingleton<FakeRepository>();
 			services.AddTransient<IProductService, ProductService>();
 		}
 
