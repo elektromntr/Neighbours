@@ -101,6 +101,27 @@ namespace Tests.Logic
 		}
 
 		[Fact]
+		public async Task Create_CreatedProductHasIdWithProperGuid()
+		{
+			//Arrange
+			var product = new Product
+			{
+				Name = "Test"
+			};
+			fakeRepoMoq.Setup(r => r.Add(It.IsAny<Product>()))
+				.Returns(product);
+			_sut = new ProductService(fakeRepoMoq.Object);
+
+			//Act
+			Product result = await _sut.Create(product);
+
+			//Assert
+			Assert.NotNull(result);
+			Assert.IsType<Product>(result);
+			Assert.NotEqual(Guid.Empty, result.Id);
+		}
+
+		[Fact]
 		public async Task Delete_RemovesProduct()
 		{
 			//Arrange
@@ -108,10 +129,10 @@ namespace Tests.Logic
 			_sut = new ProductService(fakeRepoMoq.Object);
 
 			//Act
-			_sut.Delete(_testGuid);
+			await _sut.Delete(_testGuid);
 
 			//Assert
-			fakeRepoMoq.Verify(r => r.Delete(_testGuid));
+			fakeRepoMoq.Verify(r => r.Delete(_testGuid), Times.Exactly(1));
 		}
 	}
 }

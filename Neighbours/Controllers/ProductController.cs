@@ -32,12 +32,26 @@ namespace Neighbours.Controllers
 		}
 
 		[HttpGet]
-		[Route("GetOne/{id:Guid}")]
+		[Route("{id:Guid}")]
 		public async Task<ActionResult<Product>> GetOne(Guid id)
 		{
             var result = await _productService.GetOne(id);
             if (result is null) return NotFound();
             return Ok(result);
         }
+
+		[HttpPost]
+		public async Task<ActionResult<Product>> Create(Product product)
+		{
+			var result = await _productService.Create(product);
+			return CreatedAtAction(nameof(GetOne), new { id = result.Id } , result);
+		}
+
+		[HttpDelete]
+		public async Task<IActionResult> Delete(Guid id)
+		{
+			await _productService.Delete(id);
+			return NoContent();
+		}
 	}
 }

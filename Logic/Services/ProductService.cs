@@ -31,6 +31,9 @@ namespace Logic.Services
 
 		public async Task<Product> Create(Product product)
 		{
+			product.Id = Guid.NewGuid();
+			product.CreationDate = DateTime.Now; 
+			product.EditDate = DateTime.Now;
 			var result = _fakeRepo.Add(product);
 			return result;
 		}
